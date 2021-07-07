@@ -43,8 +43,8 @@ public class JobsDataService {
         return PopularArea;
     }
 
-    public Hashtable<String, Integer> getCountSkills(Dataset<Row> dataset) {
-        Hashtable<String, Integer> Skillsmap = new Hashtable<>();
+    public LinkedHashMap<String, Integer> getCountSkills(Dataset<Row> dataset) {
+        LinkedHashMap<String, Integer> Skillsmap = new LinkedHashMap<>();
 
         List<Row> dataSkills = dataset.select("Skills").collectAsList();
 
@@ -62,20 +62,42 @@ public class JobsDataService {
         }
 
         int count = 0;
-        int ind=0;
-        for (int j= 0; j < allskills.size(); j++) {
+//        int ind=0;
+        for (int j= 0; j < skillselect.size(); j++) {
             for (int k = 0; k < allskills.size(); k++) {
-                if (skillselect.get(ind).equals(allskills.get(k))) {
+                if (skillselect.get(j).equals(allskills.get(k))) {
                     count += 1;
                 }
             }
-            Skillsmap.put(skillselect.get(ind), count);
+            Skillsmap.put(skillselect.get(j), count);
             count= 0;
-            ind++;
-            if (ind == skillselect.size())
-                ind = 0;
+//            ind++;
+//            if (ind == skillselect.size())
+//                ind = 0;
         }
+        Skillsmap=sortMap( Skillsmap);
 ////        Dataset<Row> dataset2=daSkillsmap;
         return Skillsmap;
+    }
+    public static LinkedHashMap<String, Integer> sortMap(Map<String, Integer> map)
+    {
+        // Create a list from elements of HashMap
+        List<Map.Entry<String, Integer> > list = new LinkedList<Map.Entry<String, Integer> >(map.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() {
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2)
+            {
+                return (o2.getValue()).compareTo(o1.getValue());
+            }
+        });
+
+        // put data from sorted list to hashmap
+        LinkedHashMap<String, Integer> Sorted = new LinkedHashMap<String, Integer>();
+        for (Map.Entry<String, Integer> ma : list)
+        {
+            Sorted.put(ma.getKey(), ma.getValue());
+        }
+        return Sorted;
     }
 }

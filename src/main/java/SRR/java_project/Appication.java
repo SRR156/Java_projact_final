@@ -4,6 +4,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.StructType;
 
 import java.util.*;
 
@@ -17,31 +18,25 @@ public class Appication {
         JobsDataService s = new JobsDataService();
         // CSV File Path
         String filePath = "data/Wuzzuf_Jobs.csv";
-
-        // Requirement 1
-        // Create a spark session and read the data set from the csv file and convert it into a dataframe
-        DAO dao = new DAO();
+//        Dataset<Row> d = d1.LoadData(filePath);
+//         Requirement 1
+//         Create a spark session and read the data set from the csv file and convert it into a dataframe
 
         Dataset<Row> d = d1.LoadData(filePath);
 
-        // Problem
-        // Dataset<JobDetails> dataset = data.as(Encoders.bean(JobDetails.class));
-        // Dataset<Row> d = dataset.as(Encoders.bean(Row.class));
 
-        /* System.out.println("=== Display Some Cairo ===");
-        d.filter(row -> row.get(6).equals("Dexef")).show(); */
 
         // Display some of the data
         System.out.println("=== Display Some of the data ===");
-        s.getDataSummary(d);
+        d.show(20);
 
         // Requirement 2
         // Display the data's Display the data Structure & Summary
         System.out.println("======== Display the data's Structure & Summary ========");
         System.out.println("=== Data's structure ===");
-        s.getDataStructure(d);
+        s.getDataStructure(d).printTreeString();
         System.out.println("=== Data's summary ===");
-        s.getDataSummary(d);
+        s.getDataSummary(d).show();
 
         // Requirement 3
         // Clean the data
@@ -87,7 +82,7 @@ public class Appication {
         // Requirement 10
         System.out.println("=== Display most important skills ===");
         s.getCountSkills(d);
-        Hashtable<String, Integer> map=s.getCountSkills(d);
+        LinkedHashMap<String, Integer> map=s.getCountSkills(d);
         for (Map.Entry<String, Integer> entry : map.entrySet())
             System.out.println("Key = " + entry.getKey() +
                     ", Value = " + entry.getValue());
